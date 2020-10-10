@@ -7,25 +7,18 @@ const port = process.env.PORT || 4000
 const { users } = require('./state')
 
 /* BEGIN - create routes here */
-app.get('/users', function (req, res) {
-  res.send(users)
-})
-
-app.get('/users/1', function (req, res) {
-  res.send(users[0])
+app.get('/users/:userId', function (req, res) {
+  let userId = parseInt(req.params.userId)
+  let user = users.find(user => user._id === userId)
+  res.send(user)
 })
 
 app.post('/users', function (req, res) {
   //create new user object to array of users and then return new user
-  let user = {
-    "_id": 5,
-    "name": "Samson",
-    "occupation": "goofus",
-        "avatar": "https://pbs.twimg.com/profile_images/718881904834056192/WnMTb__R.jpg"
-
-  }
+  let user = req.body
+  user._id = users.length + 1
   users.push(user)
-  res.send(user)
+  res.send(users)
 })
 
 app.put('/users/1', function (req, res) {
@@ -33,6 +26,10 @@ app.put('/users/1', function (req, res) {
   user.name = "Dan"
   
   res.send(users[0])
+})
+
+app.delete('/users/:userid', (req, res)=> {
+  res.send(users.splice(1,1))
 })
 
 
